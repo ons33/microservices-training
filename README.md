@@ -67,54 +67,70 @@ microservices-training/
 │   └── screenshots/
 │
 └── README.md
+```
 
-Session Details
-04 - Microservices Communication
+---
+
+## Session Details
+
+### 04 - Microservices Communication
 
 This session covers communication between microservices, including synchronous and asynchronous communication.
 
-Main concepts:
+**Main concepts:**
 
-REST communication
-OpenFeign
-RabbitMQ
-Producer and consumer
-Queue, exchange, and routing key
-05 - Dockerisation & Containerisation
+- REST communication
+- OpenFeign
+- RabbitMQ
+- Producer and consumer
+- Queue, exchange, and routing key
+
+---
+
+### 05 - Dockerisation & Containerisation
 
 This session focuses on containerizing microservices and running the complete architecture using Docker and Docker Compose.
 
-Main concepts:
+**Main concepts:**
 
-Dockerfile
-Docker image
-Docker container
-Docker Desktop
-Docker Compose
-Multi-container architecture
-06 - Security with Keycloak
+- Dockerfile
+- Docker image
+- Docker container
+- Docker Desktop
+- Docker Compose
+- Multi-container architecture
+
+---
+
+### 06 - Security with Keycloak
 
 This session focuses on securing a microservices architecture using Keycloak.
 
-Main concepts:
+**Main concepts:**
 
-Authentication
-Authorization
-OAuth2
-OpenID Connect
-JWT
-Realm, client, user, and role
-API Gateway security
-Objective
+- Authentication
+- Authorization
+- OAuth2
+- OpenID Connect
+- JWT
+- Realm, client, user, and role
+- API Gateway security
+
+---
+
+## Objective
 
 The objective of this training is to build a complete microservices architecture step by step, including:
 
-Communication between services
-Asynchronous messaging
-Containerization
-Service discovery
-Centralized configuration
-Security with Keycloak
-Author
+- Communication between services
+- Asynchronous messaging
+- Containerization
+- Service discovery
+- Centralized configuration
+- Security with Keycloak
 
-Ons Ben Amor
+---
+
+## Author
+
+**Ons Ben Amor**
