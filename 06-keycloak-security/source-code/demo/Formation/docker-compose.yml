@@ -1,0 +1,95 @@
+version: '3.9'
+
+services:
+
+  eureka-server:
+    build: ./eureka
+    image: ons/eureka:1.0
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  mysqldb:
+    image: mysql:5.6
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=jobTest
+
+  # candidat:
+  #   build: ./microservices/candidat
+  #   image: ons/candidat:1.0
+  #   ports:
+  #     - "8081:8081"
+  #   depends_on:
+  #     - eureka-server
+  #   environment:
+  #     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+  candidat-1:
+    build: ./microservices/candidat
+    image: ons/candidat:1.0
+    ports:
+      - "8081:8081"
+    depends_on:
+    - eureka-server
+    environment:
+    - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+    - SPRING_APPLICATION_NAME=candidat
+    
+
+  candidat-2:
+    image: ons/candidat:1.0
+    ports:
+      - "8083:8081"
+    depends_on:
+      - eureka-server
+    environment:
+   
+    - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+    - SPRING_APPLICATION_NAME=candidat       
+
+  job:
+    build: ./microservices/job
+    image: ons/job:1.0
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysqldb
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/jobTest?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+
+  api-gateway:
+    build: ./gateway
+    image: ons/apigateway:1.0
+    ports:
+      - "8090:8080"
+    depends_on:
+      - eureka-server
+      - keycloak
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://localhost:8080/realms/JobBoardKeycloack
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8080/realms/JobBoardKeycloack/protocol/openid-connect/certs
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3.1
+    container_name: keycloak-server
+    ports:
+      - "8080:8080"
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    command: start-dev
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    restart: unless-stopped
+
+volumes:
+  keycloak_data:
+  mysql_data:
