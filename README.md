@@ -49,22 +49,18 @@ microservices-training/
 │
 ├── 04-microservices-communication/
 │   ├── presentation/
-│   ├── practical-session/
 │   ├── source-code/
-│   └── screenshots/
+│   └── workshop/
 │
 ├── 05-dockerisation-containerisation/
 │   ├── presentation/
-│   ├── practical-session/
 │   ├── source-code/
-│   └── screenshots/
+│   └── workshop/
 │
 ├── 06-keycloak-security/
 │   ├── presentation/
-│   ├── practical-session/
 │   ├── source-code/
-│   ├── keycloak-config/
-│   └── screenshots/
+│   └── workshop/
 │
 └── README.md
 ```
