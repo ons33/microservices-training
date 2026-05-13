@@ -1,0 +1,80 @@
+version: '3.9'
+
+services:
+
+  eureka-server:
+    build: ./eureka
+    image: ons/eureka:1.0
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  mysqldb:
+    image: mysql:5.6
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=jobTest
+
+  # candidat:
+  #   build: ./microservices/candidat
+  #   image: ons/candidat:1.0
+  #   ports:
+  #     - "8081:8081"
+  #   depends_on:
+  #     - eureka-server
+  #   environment:
+  #     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+  candidat-1:
+    build: ./microservices/candidat
+    image: ons/candidat:1.0
+    ports:
+      - "8081:8081"
+    depends_on:
+    - eureka-server
+    environment:
+    - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+    - SPRING_APPLICATION_NAME=candidat
+    
+
+  candidat-2:
+    image: ons/candidat:1.0
+    ports:
+      - "8083:8081"
+    depends_on:
+      - eureka-server
+    environment:
+   
+    - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+    - SPRING_APPLICATION_NAME=candidat       
+
+  job:
+    build: ./microservices/job
+    image: ons/job:1.0
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysqldb
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/jobTest?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+
+  api-gateway:
+    build: ./gateway
+    image: ons/apigateway:1.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+volumes:
+
+  mysql_data:
