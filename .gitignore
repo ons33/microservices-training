@@ -1,2 +1,5 @@
-*.zip 
-*.zip 
+*.zip
+target/
+.idea/
+*.iml
+.DS_Store
